@@ -1,0 +1,25 @@
+# scripts/risk_assessment.py
+import pandas as pd
+
+def calculate_volatility(daily_returns, trading_days=252):
+    volatility = daily_returns.std() * (trading_days ** 0.5)
+    return volatility
+
+def calculate_sharpe_ratio(annualized_returns, volatility, risk_free_rate=0.01):
+    sharpe_ratio = (annualized_returns - risk_free_rate) / volatility
+    return sharpe_ratio
+
+if __name__ == "__main__":
+    daily_returns = pd.read_csv('../data/stock_data.csv', parse_dates=['date'], index_col='date').pct_change()
+    weights = {'JNJ': 0.35, 'V': 0.20, 'PG': 0.20, 'AAPL': 0.15}
+    
+    weights_series = pd.Series(weights)
+    portfolio_return = daily_returns * weights_series
+    portfolio_return = portfolio_return.sum(axis=1)
+    
+    annualized_returns = portfolio_return.mean() * 252
+    volatility = calculate_volatility(portfolio_return)
+    sharpe_ratio = calculate_sharpe_ratio(annualized_returns, volatility)
+    
+    print(f"Volatility: {volatility}")
+    print(f"Sharpe Ratio: {sharpe_ratio}")
