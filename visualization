@@ -1,0 +1,31 @@
+# scripts/visualization.py
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def plot_closing_prices(df):
+    df.plot(figsize=(10, 6))
+    plt.title('Stock Closing Prices')
+    plt.xlabel('Date')
+    plt.ylabel('Closing Price')
+    plt.legend(df.columns)
+    plt.grid(True)
+    plt.show()
+
+def plot_portfolio_returns(portfolio_return):
+    portfolio_return.plot(figsize=(10, 6))
+    plt.title('Portfolio Daily Returns')
+    plt.xlabel('Date')
+    plt.ylabel('Daily Return')
+    plt.grid(True)
+    plt.show()
+
+if __name__ == "__main__":
+    df = pd.read_csv('../data/stock_data.csv', parse_dates=['date'], index_col='date')
+    daily_returns = df.pct_change()
+    weights = {'JNJ': 0.35, 'V': 0.20, 'PG': 0.20, 'AAPL': 0.15}
+    
+    weights_series = pd.Series(weights)
+    portfolio_return = (daily_returns * weights_series).sum(axis=1)
+    
+    plot_closing_prices(df)
+    plot_portfolio_returns(portfolio_return)
