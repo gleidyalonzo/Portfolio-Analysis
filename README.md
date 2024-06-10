@@ -23,3 +23,22 @@ matplotlib
 seaborn
 scipy
 jupyter
+
+### Scripts
+
+- data_collection scripts load and pre-process the stock data.
+- performance measurement calculates the performance metrics of the porfolio.
+- risk_assessment measures the risk on the portfolio.
+- optimization performs porfolio optimazation
+
+Usage
+1. Place your stock data in the data/ directory as stock_data.csv.
+2. Run the main script to execute the complete analysis:
+
+```
+
+python main.py
+
+```
+
+This structure allows for a modular and organized approach to portfolio analysis, making each aspect of the analysis reusable and easier to maintain.
