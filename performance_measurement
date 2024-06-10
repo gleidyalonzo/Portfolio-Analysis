@@ -1,0 +1,22 @@
+# scripts/performance_measurement.py
+import pandas as pd
+
+def calculate_annualized_returns(daily_returns, trading_days=252):
+    average_daily_returns = daily_returns.mean()
+    annualized_returns = average_daily_returns * trading_days
+    return annualized_returns
+
+def calculate_portfolio_return(daily_returns, weights):
+    weighted_returns = daily_returns * weights
+    portfolio_return = weighted_returns.sum(axis=1)
+    return portfolio_return
+
+if __name__ == "__main__":
+    daily_returns = pd.read_csv('../data/stock_data.csv', parse_dates=['date'], index_col='date').pct_change()
+    weights = {'JNJ': 0.35, 'V': 0.20, 'PG': 0.20, 'AAPL': 0.15}
+    
+    weights_series = pd.Series(weights)
+    portfolio_return = calculate_portfolio_return(daily_returns, weights_series)
+    annualized_returns = calculate_annualized_returns(portfolio_return)
+    
+    print(annualized_returns)
