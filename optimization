@@ -1,0 +1,23 @@
+# scripts/optimization.py
+import pandas as pd
+import numpy as np
+from scipy.optimize import minimize
+
+def portfolio_optimization(daily_returns):
+    num_assets = len(daily_returns.columns)
+    
+    def portfolio_volatility(weights):
+        return np.sqrt(np.dot(weights.T, np.dot(daily_returns.cov() * 252, weights)))
+    
+    constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
+    bounds = tuple((0, 1) for _ in range(num_assets))
+    initial_guess = num_assets * [1. / num_assets,]
+
+    result = minimize(portfolio_volatility, initial_guess, method='SLSQP', bounds=bounds, constraints=constraints)
+    return result.x
+
+if __name__ == "__main__":
+    daily_returns = pd.read_csv('../data/stock_data.csv', parse_dates=['date'], index_col='date').pct_change()
+    
+    optimal_weights = portfolio_optimization(daily_returns)
+    print(f"Optimal Weights: {optimal_weights}")
