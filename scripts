@@ -1,0 +1,42 @@
+# main.py
+import pandas as pd
+from scripts.data_collection import load_data, calculate_daily_returns
+from scripts.performance_measurement import calculate_annualized_returns, calculate_portfolio_return
+from scripts.risk_assessment import calculate_volatility, calculate_sharpe_ratio
+from scripts.optimization import portfolio_optimization
+from scripts.visualization import plot_closing_prices, plot_portfolio_returns
+
+def main():
+    # Load data
+    df = load_data('data/stock_data.csv')
+    
+    # Calculate daily returns
+    daily_returns = calculate_daily_returns(df)
+    
+    # Define portfolio weights
+    weights = {'JNJ': 0.35, 'V': 0.20, 'PG': 0.20, 'AAPL': 0.15}
+    weights_series = pd.Series(weights)
+    
+    # Calculate portfolio return
+    portfolio_return = calculate_portfolio_return(daily_returns, weights_series)
+    annualized_returns = calculate_annualized_returns(portfolio_return)
+    
+    # Risk assessment
+    volatility = calculate_volatility(portfolio_return)
+    sharpe_ratio = calculate_sharpe_ratio(annualized_returns, volatility)
+    
+    # Portfolio optimization
+    optimal_weights = portfolio_optimization(daily_returns)
+    
+    # Visualizations
+    plot_closing_prices(df)
+    plot_portfolio_returns(portfolio_return)
+    
+    # Print results
+    print(f"Annualized Returns: {annualized_returns}")
+    print(f"Volatility: {volatility}")
+    print(f"Sharpe Ratio: {sharpe_ratio}")
+    print(f"Optimal Weights: {optimal_weights}")
+
+if __name__ == "__main__":
+    main()
